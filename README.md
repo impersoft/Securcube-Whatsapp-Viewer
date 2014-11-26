@@ -2,10 +2,9 @@
 
 ##Welcome to Securcube Whatsapp Viewer##
 
-This application can open whatsapp databases in various format:
+This application can display whatsapp's chats and messages directly from it's databases.
 
-
-
+Supported databases format:
 
 >
 > ##Android
@@ -17,13 +16,4 @@ This application can open whatsapp databases in various format:
 > 1.   ChatStorage.sqlite
 >
 
-
-
-> ## This is a header.
-> 
-> 1.   This is the first list item.
-> 2.   This is the second list item.
-> 
-> Here's some example code:
-> 
->     return shell_exec("echo $input | $markdown_script");
+Other databases are not supported yet
