@@ -17,3 +17,7 @@ Supported databases format:
 >
 
 Other databases are not supported yet
+
+if you want to extrat databases from android devices you might be interested of [our android tool](https://bitbucket.org/securcube/android-tools)
+
+Powered by [Securcube](http://securcube.net/)
