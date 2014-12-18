@@ -2,7 +2,7 @@
 
 ##Welcome to Securcube Whatsapp Viewer##
 
-This application can display whatsapp's chats and messages directly from its databases.
+This application is a forensic tool. It can display whatsapp's chats and messages directly from its databases.
 
 Supported databases format:
 
