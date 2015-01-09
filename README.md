@@ -18,7 +18,7 @@ Supported databases format:
 
 Other databases are not supported yet
 
-If you want to extract whatsapp 'key' file or have a full backup (with all databases) from android devices you might be interested on [our android tool](https://github.com/securcubemassimo/Securcube-Whatsapp-Viewer)
+If you want to extract whatsapp 'key' file or have a full backup (with all databases) from android devices you might be interested on [our android tool](https://github.com/securcubemassimo/Securcube-Android-Tools)
 
 
 Powered by [Securcube](http://securcube.net/)
