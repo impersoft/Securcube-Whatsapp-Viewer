@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,7 +15,6 @@ namespace WhatsappViewer.DataSources
     class DataSourceAndroid : IDataSource
     {
 
-        private const string and_code = "346a23652a46392b4d73257c67317e352e3372482177652c";
         private string fileName;
         private SQLiteConnection sqlite_connection;
 
@@ -34,11 +34,15 @@ namespace WhatsappViewer.DataSources
             }
             else if (DatabaseFilePath.ToLower().EndsWith(".crypt"))
             {
-                System.IO.File.WriteAllBytes(fileName, Decrypt(bb, and_code));
+                System.IO.File.WriteAllBytes(fileName, Decrypt(bb));
             }
             else if (DatabaseFilePath.ToLower().EndsWith(".crypt7"))
             {
-                System.IO.File.WriteAllBytes(fileName, Decrypt7(bb, and_code));
+                System.IO.File.WriteAllBytes(fileName, Decrypt7(bb));
+            }
+            else if (DatabaseFilePath.ToLower().EndsWith(".crypt8"))
+            {
+                System.IO.File.WriteAllBytes(fileName, Decrypt8(bb));
             }
             else
             {
@@ -150,7 +154,43 @@ namespace WhatsappViewer.DataSources
 
         #region encrypprion
 
-        public static byte[] Decrypt7(byte[] toEncryptArray, string key)
+        public static byte[] Decrypt8(byte[] toEncryptArray)
+        {
+            return DecompressGzip(Decrypt7(toEncryptArray));
+        }
+
+        private static byte[] DecompressGzip(byte[] gzip)
+        {
+            byte[] baRetVal = null;
+            using (MemoryStream ByteStream = new MemoryStream(gzip))
+            {
+                using (GZipStream stream = new GZipStream(ByteStream, CompressionMode.Decompress))
+                {
+                    const int size = 4096;
+                    byte[] buffer = new byte[size];
+                    using (MemoryStream memory = new MemoryStream())
+                    {
+                        int count = 0;
+                        count = stream.Read(buffer, 0, size);
+                        while (count > 0)
+                        {
+                            memory.Write(buffer, 0, count);
+                            memory.Flush();
+                            count = stream.Read(buffer, 0, size);
+                        }
+
+                        baRetVal = memory.ToArray();
+                        memory.Close();
+                    }
+                    stream.Close();
+                }
+                ByteStream.Close();
+            }
+            return baRetVal;
+        }
+
+
+        public static byte[] Decrypt7(byte[] toEncryptArray)
         {
 
             MessageBox.Show("We need the 'key' file, locatad on the device folder '/data/data/com.whatsapp/files/key' ");
@@ -181,18 +221,15 @@ namespace WhatsappViewer.DataSources
 
             using (var rijndaelManaged = new RijndaelManaged())
             {
-                //rijndaelManaged.KeySize = 128;
                 rijndaelManaged.Key = db7key_aes;
                 rijndaelManaged.IV = db7key_iv;
                 rijndaelManaged.Mode = CipherMode.CBC;
-                //rijndaelManaged.Padding = PaddingMode.ANSIX923;
 
 
                 using (var memoryStream = new MemoryStream(toEncryptArray))
                 using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(db7key_aes, db7key_iv), CryptoStreamMode.Read))
                 {
                     var dummy = new StreamReader(cryptoStream, Encoding.Default).ReadToEnd();
-                    //System.IO.File.WriteAllText(@"C:\Users\Massimo\Desktop\database.testx.sqlite", dummy);
                     return System.Text.Encoding.Default.GetBytes(dummy);
                 }
             }
@@ -200,9 +237,9 @@ namespace WhatsappViewer.DataSources
         }
 
 
-
-        public static byte[] Decrypt(byte[] toEncryptArray, string key)
+        public static byte[] Decrypt(byte[] toEncryptArray)
         {
+            string key = "346a23652a46392b4d73257c67317e352e3372482177652c";
             byte[] keyArray = ParseHex(key);
             RijndaelManaged rDel = new RijndaelManaged();
             rDel.Key = keyArray;

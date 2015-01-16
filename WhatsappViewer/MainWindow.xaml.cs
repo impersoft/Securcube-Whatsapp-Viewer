@@ -33,7 +33,7 @@ namespace WhatsappViewer
         }
 
         IDataSource data;
-        OpenFileDialog openFileDialog1 = new OpenFileDialog() { Filter = "All Supported files|*.crypt7;*.crypt;*.db;*.sqlite;|Android Crypted (.crypt7)|*.crypt7|Android Crypted (.crypt)|*.crypt|Android (.db)|*.db|IOS (.sqlite)|*.sqlite|All Files (*.*)|*.*" };
+        OpenFileDialog openFileDialog1 = new OpenFileDialog() { Filter = "All Supported files|*.crypt8;*.crypt7;*.crypt;*.db;*.sqlite;|Android Crypted (.crypt8)|*.crypt8|Android Crypted (.crypt7)|*.crypt7|Android Crypted (.crypt)|*.crypt|Android (.db)|*.db|IOS (.sqlite)|*.sqlite|All Files (*.*)|*.*" };
 
         private void ButtonSelectFile_Click(object sender, RoutedEventArgs e)
         {
@@ -46,7 +46,7 @@ namespace WhatsappViewer
 
                 var filename = openFileDialog1.FileName.ToLower();
 
-                if (filename.EndsWith(".crypt7") || filename.EndsWith(".crypt") || filename.EndsWith(".db"))
+                if (filename.EndsWith(".crypt8") || filename.EndsWith(".crypt7") || filename.EndsWith(".crypt") || filename.EndsWith(".db"))
                 {
                     data = new DataSourceAndroid(openFileDialog1.FileName);
                 }
